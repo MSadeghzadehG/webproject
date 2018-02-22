@@ -3,12 +3,13 @@
 	padding:0;
 }
 body{
-	background-color:#1c1c1c;
+	/*background-color:#1c1c1c;*/
+	background-color: #fff;
 }
 .middle{
-	width : 100	%;
-	margin-left: 50px;
-	margin-top: 20px;
+	width : 800px;
+	margin-left : 50px;
+	margin-top : 20px;
 }
 .main{
 }
@@ -21,35 +22,31 @@ div.main{
 
 .keyboardImage{
 	transform: perspective( 600px ) rotateX( 80deg );
-	transition:1s all ease-in;
-	
+	transform-origin: 50% 0%;
+	transition:1s all ease-in-out;	
 	z-index:100;
-	margin-top:-140px;
-	margin-left : 15px;
+	margin-top:-15px;
+	margin-left : 150px;
 	display:block;
-	width : 56%;
+	width : 50%;
 }
 .monitorImage{
-	transition:1s all linear;
-	
+	transition:1s all ease-out;	
 	z-index:101;
-	width:45%;
-	margin-left:55px; 
+	width:51%;
+	margin-left:147px; 
 	
 }
 
 .middle:hover img.keyboardImage{
 	transform: perspective( 600px ) rotateX( 0deg );
-	padding-left:108px;
-	transform: translate(0, 120px);
-	width : 270px;
-	margin-left : -28px;
+	margin-top: -39px;
+	width: 48%;
+	margin-left : 159px;
 }
 
 .middle:hover img.monitorImage{
-	transform: perspective( 600px ) rotateX( -45deg );	
-	width:300px; /*490*/
-	margin-top : -30px;
-	margin-bottom:-30px;
-	margin-left:65px; /*-18*/
+	transform: perspective( 600px ) rotateX( -20deg );	
+	transform-origin: 50% 50%;
+	
 }

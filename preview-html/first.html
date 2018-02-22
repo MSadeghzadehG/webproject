@@ -4,12 +4,14 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script>
 			var elementIsClicked = false; // declare the variable that tracks the state
-			var element = document.getElementById("lapImage"); // grab a reference to your element
+			 // grab a reference to your element			
 			function clickHandler(){ // declare a function that updates the state
+			var elem = document.getElementById("lapImage");
+			
 			  if (elementIsClicked == false){	
 					elementIsClicked = true;
-					document.getElementById("lapImage").src = "new.png";
-					//document.getElementById("lapImage").style.marginTop = "10px";
+					elem.src = "new.png";
+					document.getElementById("lapImage").style.marginTop = "10px";
 					document.getElementById("lapImage").removeClass;
 					document.getElementById("lapImage").style.height = "125%";
 				}
@@ -20,10 +22,15 @@
 					document.getElementById("lapImage").style.height = "95%";
 				}
 			}
-			//element.addEventListener('click', clickHandler); // associate the function above with the click event
+			//document.getElementById("lapImage").addEventListener("click", function func(){clickHandler();});
+			 // associate the function above with the click event
+			document.getElementById("lapImage").addEventListener("click", myFunction);
+			function myFunction() {
+				alert("Hello World!");
+			}
 		</script>
 		</head>
-  <body bgcolor="#696969" id="texture1">
+  <body bgcolor="#696969" id="texture1" style="overflow: hidden;">
    <div name="top_row" class="topRow">
        <h1 class="title" id="title">FastCode</h1>
        <h2 class = "subtitle">coding test</h2>
