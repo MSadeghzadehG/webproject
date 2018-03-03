@@ -2,10 +2,40 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
-	<body>
-		<div class="middle main" >
-			<img src="monitor-new.png" draggable="false" class="monitorImage"/>
-			<img src="keyBoard-new.png" class="keyboardImage" draggable = "false"/>
+	<body bgcolor="#696969" id="texture1" >
+		<div name="top_row" class="topRow">
+			<h1 class="title" id="title">FastCode</h1>
+			<h2 class = "subtitle">coding test</h2>
+			<h2 class = "subtitle">learning lessons</h2>
 		</div>
+		<div name="main_row" class="mainRow" id="mainRow">
+				<img id="lapImage" class="laptopimg" src="display.png" >
+				<div class="middle main" >
+					<img src="monitor-new.png" draggable="false" class="monitorImage"/>
+					<img src="keyBoard-new.png" class="keyboardImage" draggable = "false"/>
+				</div>
+		</div>
+		<div name="bottom_row" class="bottomRow"></div>
+		
+		<script>
+			 var elementIsClicked = false; // declare the variable that tracks the state
+				  // grab a reference to your element			
+			var lapImage = document.getElementById("lapImage");
+			var monitor = document.getElementById("monitor-new");
+			var keyBoard = document.getElementById("keyBoard-new");
+			function clickHandler(){ // declare a function that updates the state
+				if (elementIsClicked == false){	
+					elementIsClicked = true;
+					lapImage.src = "new.png";
+					lapImage.removeClass;
+				//	lapImage.style.opacity = 0;
+				//	keyBoard.style.transform = "perspective( 1600px ) rotateX( 0deg )"; 
+				}
+				else {
+					elementIsClicked = false;
+				}
+			}
+			lapImage.addEventListener("click", clickHandler);					 
+		</script>
 	</body>
 </html>

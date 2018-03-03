@@ -2,33 +2,7 @@
   <head >
     <title>codingFaster</title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script>
-			var elementIsClicked = false; // declare the variable that tracks the state
-			 // grab a reference to your element			
-			function clickHandler(){ // declare a function that updates the state
-			var elem = document.getElementById("lapImage");
-			
-			  if (elementIsClicked == false){	
-					elementIsClicked = true;
-					elem.src = "new.png";
-					document.getElementById("lapImage").style.marginTop = "10px";
-					document.getElementById("lapImage").removeClass;
-					document.getElementById("lapImage").style.height = "125%";
-				}
-				else {
-					elementIsClicked = false;
-					document.getElementById("lapImage").src = "display.png";
-					document.getElementById("lapImage").removeClass;
-					document.getElementById("lapImage").style.height = "95%";
-				}
-			}
-			//document.getElementById("lapImage").addEventListener("click", function func(){clickHandler();});
-			 // associate the function above with the click event
-			document.getElementById("lapImage").addEventListener("click", myFunction);
-			function myFunction() {
-				alert("Hello World!");
-			}
-		</script>
+		
 		</head>
   <body bgcolor="#696969" id="texture1" style="overflow: hidden;">
    <div name="top_row" class="topRow">
@@ -37,8 +11,32 @@
        <h2 class = "subtitle">learning lessons</h2>
    </div>
    <div name="main_row" class="mainRow" id="mainRow">
-		<p style="text-align: center"><img id="lapImage" class="laptopimg" src="display.png" onclick="clickHandler()"></p>
+		<p style="text-align: center">
+			<img id="lapImage" class="laptopimg" src="display.png" >
+		</p>
    </div>
    <div name="bottom_row" class="bottomRow"></div>
+<script>
+			var elementIsClicked = false; // declare the variable that tracks the state
+			 // grab a reference to your element			
+			 var elem = elem;
+			function clickHandler(){ // declare a function that updates the state
+			  if (elementIsClicked == false){	
+					elementIsClicked = true;
+					elem.src = "new.png";
+					elem.style.marginTop = "10px";
+					elem.removeClass;
+					elem.style.height = "125%";
+				}
+				else {
+					elementIsClicked = false;
+					elem.src = "display.png";
+					elem.removeClass;
+					elem.style.height = "95%";
+				}
+			}
+			elem.addEventListener("click", clickHandler);
+			
+		</script>
   </body>
 </html>
