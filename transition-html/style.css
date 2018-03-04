@@ -72,6 +72,7 @@
 	z-index :100;
 }
 
+
 .keyboardImage{
 	transform: perspective( 1440px ) rotateX( 80deg );
 	transform-origin: 50% 0%;
@@ -87,20 +88,4 @@
 	width: 583px;
 	margin-left:57px; 
 	margin-top :1px;
-}
-
-.mainRow:hover img.laptopimg{
-	opacity : 0.0;
-}
-
-.mainRow:hover img.keyboardImage{
-	transform: perspective( 1600px ) rotateX( 0deg );
-	margin-top: -50px;
-	width: 558px;
-	margin-left : 70px;
-}
-
-.mainRow:hover img.monitorImage{
-	transform: perspective( 1400px ) rotateX( -20deg );	
-	transform-origin: 50% 50%;	
 }
