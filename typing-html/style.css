@@ -1,0 +1,74 @@
+
+    #texture1 {
+        background-image: url(texture.png);
+        background-repeat: repeat;
+        background-color: #DFE2DB;
+
+    }
+    .title{
+        font-size: 40px;
+        border : 1px;
+        border-radius: 10px;
+        margin: 30px;
+        padding: 10px;
+        padding-top: 7px;
+        display: inline-flex;
+        font-family: "Consolas";
+        background-color: #191919;
+        color: #FFF056;
+    }
+    .subtitle{
+        font-size: 20px;
+        margin: 40px;
+        padding: 7px;
+        border-radius: 5px;
+        margin-left:  0px;
+        display: inline-flex;
+        float: right;
+        font-family: "Segoe UI";
+        background-color: #4A96AD;
+		color : #ffffff;
+    }
+    .topRow{
+		position: absolute;
+        height: 10%;
+        width: 100%;
+    }
+    .mainRow{
+		height: 100%;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .laptopimg{
+		position : absolute;
+		margin-top : -0px;
+        height: auto;
+		width : 50%;
+		;	
+    }
+	
+	.key {
+		
+		margin-top: 310px;
+		height:20px;
+		width:20px;
+		color:white;
+		font-size:10px;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
