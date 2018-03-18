@@ -1,8 +1,9 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="typed.js"></script>
 	</head>
-	<body bgcolor="#696969" id="texture1" >
+	<body bgcolor="#696969" id="texture1"  style = "overflow:hidden;">
 		<div name="top_row" class="topRow">
 			<h1 class="title" id="title">FastCode</h1>
 			<h2 class = "subtitle">coding test</h2>
@@ -16,13 +17,25 @@
 				</div>
 		</div>
 		<div name="bottom_row" class="bottomRow"></div>
-		
 	</body>
 	<script>
+			//import Typed from 'typed.js';
 			var elementIsClicked = false; // declare the variable that tracks the state
 			var lapImage = document.getElementById("lapImage");
 			var monitor = document.getElementById("monitorImage");
 			var keyBoard = document.getElementById("keyboardImage");
+			
+			lapImage.addEventListener("click", clickHandler);					 
+			
+			
+			var options = {
+			  strings: ["<i>First</i> sentence.", "&amp; a second sentence."],
+			  typeSpeed: 40
+			}
+
+			var typed = new Typed(".element", options);
+			
+			
 			function clickHandler(){ // declare a function that updates the state
 				if (elementIsClicked == false){	
 					elementIsClicked = true;
@@ -59,7 +72,6 @@
 			function changeOpacity(){
 				lapImage.style.opacity = "1";
 			}
-			lapImage.addEventListener("click", clickHandler);					 
 		</script>
 
 </html>
