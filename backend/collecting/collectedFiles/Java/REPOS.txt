@@ -1,0 +1,12 @@
+/ReactiveX/RxJava
+/iluwatar/java-design-patterns
+/elastic/elasticsearch
+/google/guava
+/spring-projects/spring-boot
+/kdn251/interviews
+/zxing/zxing
+/alibaba/dubbo
+/skylot/jadx
+/libgdx/libgdx
+/alibaba/fastjson
+/android10/Android-CleanArchitecture

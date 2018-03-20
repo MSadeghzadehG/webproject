@@ -1,0 +1,76 @@
+
+package org.elasticsearch.cluster.routing.allocation;
+
+import org.apache.lucene.util.TestUtil;
+import org.elasticsearch.Version;
+import org.elasticsearch.cluster.ClusterState;
+import org.elasticsearch.cluster.metadata.IndexMetaData;
+import org.elasticsearch.cluster.metadata.MetaData;
+import org.elasticsearch.cluster.routing.IndexShardRoutingTable;
+import org.elasticsearch.cluster.routing.RoutingTable;
+import org.elasticsearch.cluster.routing.ShardRouting;
+import org.elasticsearch.common.settings.Settings;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.elasticsearch.cluster.routing.ShardRoutingState.INITIALIZING;
+
+
+public class BalanceUnbalancedClusterTests extends CatAllocationTestCase {
+
+    @Override
+    protected Path getCatPath() throws IOException {
+        Path tmp = createTempDir();
+        try (InputStream stream = Files.newInputStream(getDataPath("/org/elasticsearch/cluster/routing/issue_9023.zip"))) {
+            TestUtil.unzip(stream, tmp);
+        }
+        return tmp.resolve("issue_9023");
+    }
+
+    @Override
+    protected ClusterState allocateNew(ClusterState state) {
+        String index = "tweets-2014-12-29:00";
+        AllocationService strategy = createAllocationService(Settings.builder()
+                .build());
+        MetaData metaData = MetaData.builder(state.metaData())
+                .put(IndexMetaData.builder(index).settings(settings(Version.CURRENT)).numberOfShards(5).numberOfReplicas(1))
+                .build();
+
+        RoutingTable initialRoutingTable = RoutingTable.builder(state.routingTable())
+                .addAsNew(metaData.index(index))
+                .build();
+
+        ClusterState clusterState = ClusterState.builder(state).metaData(metaData).routingTable(initialRoutingTable).build();
+        clusterState = strategy.reroute(clusterState, "reroute");
+        while (true) {
+            if (clusterState.routingTable().shardsWithState(INITIALIZING).isEmpty()) {
+                break;
+            }
+            clusterState = strategy.applyStartedShards(clusterState, clusterState.routingTable().shardsWithState(INITIALIZING));
+        }
+        Map<String, Integer> counts = new HashMap<>();
+        for (IndexShardRoutingTable table : clusterState.routingTable().index(index)) {
+            for (ShardRouting r : table) {
+                String s = r.currentNodeId();
+                Integer count = counts.get(s);
+                if (count == null) {
+                    count = 0;
+                }
+                count++;
+                counts.put(s, count);
+            }
+        }
+        for (Map.Entry<String, Integer> count : counts.entrySet()) {
+                        assertTrue("Node: " + count.getKey() + " has shard mismatch: " + count.getValue(), count.getValue() >= 2);
+            assertTrue("Node: " + count.getKey() + " has shard mismatch: " + count.getValue(), count.getValue() <= 3);
+
+        }
+        return clusterState;
+    }
+
+}

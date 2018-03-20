@@ -1,0 +1,11 @@
+
+
+package com.alibaba.com.caucho.hessian.io;
+
+import java.io.IOException;
+
+
+public interface Serializer {
+    public void writeObject(Object obj, AbstractHessianOutput out)
+            throws IOException;
+}

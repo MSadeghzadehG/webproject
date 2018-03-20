@@ -6,21 +6,59 @@ import sys
 import time
 import operator
 
+def lanProperties(lan):
+    Lan = lan.capitalize()
+    lanSearch = Lan
+    if lan == 'java' :
+        extension = '.java'
+    elif lan == 'c++' :
+        extension = '.cpp'
+        lanSearch = 'C%2B%2B'
+    elif lan == 'c#' :
+        extension = '.cs'
+        lanSearch = 'C%23'
+    elif lan == 'python' :
+        extension = '.py'
+    elif lan == 'html' :
+        Lan = 'HTML'
+        extension = '.html'
+    elif lan == 'javascript' :
+        Lan = 'JavaScript'
+        extension = '.js'
+    elif lan == 'css' :
+        Lan = 'CSS'
+        extension = '.css'
+    elif lan == 'haskell' :
+        extension = '.hs'
+    elif lan == 'kotlin' :
+        extension = '.kt'
+    elif lan == 'ruby' :
+        extension = '.rb'
+    elif lan == 'rust' :
+        extension = '.rs'
+    elif lan == 'scala' :
+        extension = '.scala'
+    elif lan == 'swift' :
+        extension = '.swift'
+    elif lan == 'c' :
+        extension = '.c'
+    
 def main():
     start_time = time.time()
     Lan = sys.argv[1].capitalize() #programming language name
-    extension = sys.argv[1] # extension of filenames
+    path = 'collecting/collectedFiles/'+Lan+'/edited/'
+    extension = '.'+sys.argv[1] # extension of filenames
     mostCommon = {} #a list that contain most popular words
     #-----------------------find files
-    files = os.listdir(Lan) 
+    files = os.listdir(path) 
     for file1 in files:
-        if not file1.endswith('.'+extension):
+        if not file1.endswith(extension):
             files.remove(file1)
     print('num of files : '+ str(len(files)))
     #-----------------------exploring in files
     for file1 in files:
         #print(os.path.join("/mydir", file))
-        f = open(Lan+'/'+ str(file1),'r')
+        f = open(path + str(file1),'r')
         code = f.read()
         words = code.split(' ') # seprates all words in the source code
         counter = collections.Counter(words) 
@@ -33,7 +71,7 @@ def main():
         f.close()
     mostCommon = sorted(list(mostCommon.items()), key=operator.itemgetter(1), reverse=True)# sorts mostCommon
     #print(mostCommon)
-    f = open(Lan+'/mostCommonWords.csv','w')
+    f = open(path+'mostCommonWords.csv','w')
     f.write(str(mostCommon))
     f.close()
     print("--- %s seconds ---" % (time.time() - start_time))
