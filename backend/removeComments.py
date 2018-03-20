@@ -2,7 +2,49 @@ import os
 import sys
 import time
 
+def lanProperties(lan,Lan,extension):
+    Lan[0] = lan.capitalize()
+    if lan == 'java' :
+        extension[0] = '.java'
+    elif lan == 'c++' :
+        extension[0] = '.cpp'
+    elif lan == 'c#' :
+        extension[0] = '.cs'
+    elif lan == 'python' :
+        extension[0] = '.py'
+    elif lan == 'html' :
+        Lan = 'HTML'
+        extension[0] = '.html'
+    elif lan == 'javascript' :
+        Lan = 'JavaScript'
+        extension[0] = '.js'
+    elif lan == 'css' :
+        Lan = 'CSS'
+        extension[0] = '.css'
+    elif lan == 'haskell' :
+        extension[0] = '.hs'
+    elif lan == 'kotlin' :
+        extension[0] = '.kt'
+    elif lan == 'ruby' :
+        extension[0] = '.rb'
+    elif lan == 'rust' :
+        extension[0] = '.rs'
+    elif lan == 'scala' :
+        extension[0] = '.scala'
+    elif lan == 'swift' :
+        extension[0] = '.swift'
+    elif lan == 'c' :
+        extension[0] = '.c'
 
+def findFiles(path,extension):
+    files = os.listdir(path)  
+    if not os.path.exists(path +'edited/'):
+        os.makedirs(path +'edited/')  
+    for file1 in files:
+        if not file1.endswith('.'+extension):
+            files.remove(file1)
+    print('num of files : '+ str(len(files)))
+    return files
 
 def removeOneLineComments(code,commenter):
     code1 = ''
@@ -45,38 +87,34 @@ def removeMultiLineComments(code,start,end):
             code1 = code1 + code[i] 
     return code1 
 
+def output(code,file,path):
+    f = open(path +'edited/' + str(file),'w')
+    f.write(code)
+    f.close()
+
 def main():
     start_time = time.time()
-    Lan = sys.argv[1].capitalize() #programming language name
-    extension = sys.argv[1] # extension of filenames
-    path = 'collecting/collectedFiles/'+Lan+'/'
-    files = os.listdir(path)  
-    if not os.path.exists(path +'edited/'):
-        os.makedirs(path +'edited/')  
+    lan = sys.argv[1]
+    Lan = ['']
+    extension = ['']
+    lanProperties(lan,Lan,extension)
+    path = 'collecting/collectedFiles/'+Lan[0]+'/'
+
+    files = findFiles(path,extension[0])           
+    numOfEditedFile = 0
+    
     for file1 in files:
-        if not file1.endswith('.'+extension):
-            files.remove(file1)
-    print('num of files : '+ str(len(files)))        
-    input()
-    numOfFile = 0
-    for file1 in files:
-        f = open(path + str(file1),'r')
-        code = f.read()
-        f.close()
+        code = open(path + str(file1),'r').read()
         #-------------
         code = removeOneLineComments(code,'//')
         code = removeMultiLineComments(code,'/*','*/')
         #-------------
-        f = open(path +'edited/' + str(file1),'w')
-        f.write(code)
-        f.close()
-        numOfFile += 1
-        print(numOfFile)
-
+        output(code,file1,path)
+        numOfEditedFile += 1
+        print(numOfEditedFile)
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print('All Done!')
-
 
 if __name__ == "__main__":
     main()
