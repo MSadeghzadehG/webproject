@@ -3,9 +3,15 @@
 	padding:0;
 }
 
-#texture1 {
+/* #texture1 {
 	background-image: url(texture.png);
 	background-repeat: repeat;
+} */
+
+
+body{
+	background-color:#a09e9e;
+	/* background-color: #fff; */
 }
 
 .title{
@@ -44,63 +50,76 @@
 	padding-top : 30px;
 	margin-left : auto;
 	margin-right :auto;
-	width : 800px;
-	position : black;
+	width : 1000px;
+	/* position : black; */
 }
 
-.laptopimg{
-	position : absolute;
-	width : 800px;
-	display: inline-block;
-	margin-left: auto;
-	margin-right: auto;
-	z-index : 101;
-	opacity : 1.0;
-}
-
-
-
-/*body{
-	background-color:#1c1c1c;
-	background-color: #fff;
-}*/
 
 .middle{
 	position: absolute;
-	width : 800px;
-	margin-left : 50px;
+	width : 1000px;
+	margin-left : 0px;
 	margin-top : -12px;
 	z-index :100;
 }
 
 
+.laptopimg{
+	position : absolute;
+	width : 940px;
+	display: inline-block;
+	margin-left: -68px;
+	margin-top: 2px;
+	z-index : 1;
+	opacity : 1.0;
+}
+
 .keyboardImage{
-	transform: perspective( 1440px ) rotateX( 80deg );
+	transform: perspective( 1600px ) rotateX( 80deg );
 	transform-origin: 50% 0%;
 	transition:1s all linear;	
-	margin-top:-20px;
+	margin-top:-25px;
 	display:inline;
-	width : 580px;
+	width : 675px;
 	margin-left : 62px;
 }
 
 .monitorImage{
 	transition:1s all linear;	
-	width: 583px;
+	width: 685px;
 	display:inline;
 	margin-left:57px; 
-	margin-top :1px;
+	margin-top :-10px;
+	z-index: 0;
 }
 
 .container {
     position: absolute;
-    text-align: center;
-    color: white;
+	text-align: center;
+	display: block;
+    /* color: white; */
 }
 
 .centered {
-    position: absolute;
-    top: 22%;
-    left: 52%;
-    transform: translate(-50%, -50%);
+	position: absolute;
+	display: inline;
+	top: 7%;
+	left: 28%;
+	right: 25%;  
+	/* top: 22%;
+	left: 52%;
+	transform: translate(-50%, -50%); */
 }
+
+.typing_words {
+	/* display: none; */
+	font-family: Consolas,monaco,monospace; 
+	font-size: 10vm;
+	letter-spacing: 0.5px;
+	line-height: 1.5;
+	/* transform-origin: 50% 50%; */
+	transition:1s all linear;	
+	/* word-spacing: px; */
+	z-index: 1;
+}
+
