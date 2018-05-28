@@ -103,23 +103,27 @@ body{
 .centered {
 	position: absolute;
 	display: inline;
-	top: 7%;
-	left: 28%;
-	right: 25%;  
-	/* top: 22%;
-	left: 52%;
-	transform: translate(-50%, -50%); */
+	top: 5%;
+	left: 5%;
 }
 
 .typing_words {
-	/* display: none; */
+	display: inline-block;
+	width: 550px;
+	margin-left: 190px;
 	font-family: Consolas,monaco,monospace; 
 	font-size: 10vm;
 	letter-spacing: 0.5px;
 	line-height: 1.5;
-	/* transform-origin: 50% 50%; */
-	transition:1s all linear;	
+	transform-origin: 50% 50%;
+	transition: 1s all linear;	
 	/* word-spacing: px; */
 	z-index: 1;
+}
+
+.result {
+	width: 550px;
+	display: inline-block;
+	font-family: 'Times New Roman', Times, serif; 
 }
 

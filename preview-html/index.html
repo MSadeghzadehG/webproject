@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css" />
+		<meta charset="utf-8">
 	</head>
 	<body bgcolor="#696969" id="texture1" style="height: 100%; overflow: hidden;">
 		<div name="top_row" class="topRow">
@@ -13,199 +14,13 @@
 					<img src="display.png" class="laptopimg" id="lapImage" draggable="false"/>
 					<img src="monitor-new.png"  class="monitorImage" id="monitorImage" draggable="false"/>
 					<img src="keyBoard-new.png" class="keyboardImage" id="keyboardImage" draggable = "false"/>
-					<p id="typer_paragraph" class="centered typing_words">sdfs</p>
+					<div id="typer_paragraph" class="centered typing_words"></div>
 				</div>
 		</div>
 		<div name="bottom_row" class="bottomRow">
-		</div>		
+		</div>	
 	</body>
-
-<!-- laptop -->
 	<script type="text/javascript" src="typer_lib.js"></script>
-	<script>
-			var isTypingMode = false; // declare the variable that tracks the state
-			var lapdiv = document.getElementById("lapdiv");
-			var monitor = document.getElementById("monitorImage");
-			var keyBoard = document.getElementById("keyboardImage");
-			var laptop = document.getElementById("lapImage");
-			var typingWords = document.getElementById("typer_paragraph")
-			function clickHandler(){ // declare a function that updates the state
-			
-				if (isTypingMode == false){	
-					isTypingMode = true;
-					laptop.style.opacity = "0";
-						
-					keyBoard.style.transform = "perspective( 1600px ) rotateX( 0deg )"; 
-					keyBoard.style.marginTop = "-61px";
-					keyBoard.style.width = "650px";
-					keyBoard.style.marginLeft = "59px";
-					
-					monitor.style.transform = "perspective( 1400px ) rotateX( -20deg )";	
-					monitor.style.transformOrigin =" 50% 50%";	
-					monitor.style.marginTop = "-30px";
-					
-
-					typingWords.style.transform = "perspective( 1400px ) rotateX( -20deg )";	
-				}
-				else {
-					isTypingMode = false;
-					
-					keyBoard.style.transform = "perspective( 1600px ) rotateX( 80deg )";
-					keyBoard.style.transformOrigin = "50% 0%";
-					keyBoard.style.transition = "1s all linear";	
-					keyBoard.style.marginTop = "-25px";
-					keyBoard.style.marginLeft = "62px";
-					keyBoard.style.width = "675px";
-					
-					monitor.style.transform = "perspective( 1400px ) rotateX( 0deg )";	
-					monitor.style.transition = "1s all linear";	
-					monitor.style.width= "685px";
-					monitor.style.marginLeft= "57px"; 
-					monitor.style.marginTop = "-10px";
-
-					typingWords.style.transform = "perspective( 1400px ) rotateX( 0deg )";	
-					window.setTimeout(changeOpacity, 990);
-				}
-			}
-			function changeOpacity(){
-				laptop.style.opacity = "1";
-			}
-			lapdiv.addEventListener("click", clickHandler);			 
-		</script>
-
-
-<!-- get words -->
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript">
-		$(document).ready(function() {
-			var typingWords = document.getElementById("typer_paragraph");
-			var isCurrect = [];
-			var currectKey = 0;
-			var wrongKey = 0;
-			var time;
-			var speed;
-			typingWords.innerHTML = "<input class='container' id='testbutton' type='text' value='Tap To Start Typing'/>";
-			// typingWords.innerHTML = "sdkfgjlkdfjg";
-			$("#testbutton").click(function() {
-				$.ajax({
-					url: 'http://91.98.76.233:80',
-					dataType: 'json',
-					success: function(data) {
-						$("#results").append('all good');
-						var i = 0;
-						for (var key in data) {
-							if (data.hasOwnProperty(key) && i<100) {
-								// if (key.includes("\n"))
-								key.replace("\n"," ");
-								for (var k=0;k< key.length;k++){
-									isCurrect.push(0);
-								}
-								typingWords.innerText = typingWords.innerText + key;
-								i++;
-							}
-						}
-						isCurrect[0] = 1;
-						highlight(0);
-					},
-					 error: function() {
-						$("#results").append("error");
-						alert('error');
-					}
-				});
-
-				var body = document.getElementById("texture1");
-				var index = 0;
-				document.addEventListener ("keydown",function(e) {
-					e = e || window.event;
-					var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
-					switch (charCode) {
-						case 8:
-							// console.log("Typed character: " + String.fromCharCode(charCode));
-							if (index>0){
-								isCurrect[index] = 0;
-								isCurrect[index-1] = 1;
-								index--;
-								highlight(index);
-								wrongKey++;
-							} else {
-								alert("nemishe ke :)");
-							}
-							break;
-						default :
-							break;
-
-					}
-				});
-				document.onkeypress = function(e) {
-					e = e || window.event;
-					var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
-					switch (charCode) {
-						default :
-							if (index == 0){
-								startTime = performance.now();
-							}
-							var selectedchar = typingWords.innerText.charAt(index);
-							// console.log("Typed character: " + String.fromCharCode(charCode));
-							// console.log("Typed character: " + charCode);
-							// console.log("selected character: " + typingWords.innerText.charCodeAt(index));
-							if (index < typingWords.innerText.length){
-								index++;
-								if (selectedchar == String.fromCharCode(charCode)) {
-									isCurrect[index - 1] = 3;
-									isCurrect[index] = 1;
-									highlight(index);
-								} else {
-									isCurrect[index - 1] = 2;
-									isCurrect[index] = 1;
-									highlight(index);
-								}
-								console.log("index added");
-							} else {
-								for (var k=0;k<typingWords.innerText.length;k++){
-									if (isCurrect[k]==3)
-										currectKey++;
-								}
-    							endTime = performance.now();
-								time = (endTime - startTime)/60000;
-								speed = (currectKey)/(5*time);
-								alert("tammmaaaam!\ntime: " + String(time*60)+"\nwrongKey: " + String(wrongKey)+ "\ncurrectKry: " + String(currectKey) + "\nspeed: " + String(speed) + "wpm");
-								// alert("speed : " + String(speed));
-							}
-							break;
-
-					}
-				};
-
-		
-				function highlight(index1) {
-					var text = "";
-					for (var k=0;k<typingWords.innerText.length;k++){
-						if (k == index1 - 1 || k == index1){
-							// console.log("k:"+ String(k));
-							// console.log("index:" + String(index));
-							switch (isCurrect[k]) {
-							case 0:
-								text += typingWords.innerText.substring(k,k + 1);
-								break;
-							case 1:
-								text += "<span style='background-color: " + "#C0C0C0" + ";'>" + typingWords.innerText.substring(k,k + 1) + "</span>";
-								break;
-							case 2:
-								text += "<span style='background-color: " + "#FA8072" + ";'>" + typingWords.innerText.substring(k,k + 1) + "</span>";
-								break;
-							case 3:
-								text += typingWords.innerText.substring(k,k + 1);
-								// 	text += "<span style='background-color: " + "#39FF14" + ";'>" + typingWords.innerText.substring(k,k + 1) + "</span>";
-								break;
-							}
-						} else {
-							text += typingWords.innerText.substring(k,k + 1);
-						}
-					}
-					typingWords.innerHTML = text;
-				}
-			});
-		});
-		</script>
-
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="myscripts.js"></script>
 </html>
