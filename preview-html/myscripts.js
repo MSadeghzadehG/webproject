@@ -62,7 +62,6 @@ $(document).ready(function() {
         // }
         $.ajax({
             url: 'http://91.98.76.233:80',
-            // url: 'http://localhost:8000',
             type: 'POST',
             // contentType: "application/json",
             dataType: 'json',
