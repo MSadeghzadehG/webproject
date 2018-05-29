@@ -1,0 +1,83 @@
+
+
+
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+    #pragma hdrstop
+#endif
+
+#if wxUSE_OWNER_DRAWN
+
+#include "wx/ownerdrw.h"
+
+#ifndef WX_PRECOMP
+    #include "wx/window.h"
+    #include "wx/font.h"
+    #include "wx/colour.h"
+    #include "wx/dcmemory.h"
+    #include "wx/settings.h"
+    #include "wx/utils.h"
+#endif
+
+
+bool wxOwnerDrawnBase::OnMeasureItem(size_t *width, size_t *height)
+{
+    if ( IsOwnerDrawn() )
+    {
+        wxMemoryDC dc;
+        wxFont font;
+        GetFontToUse(font);
+        dc.SetFont(font);
+
+                wxString name = wxStripMenuCodes(GetName(), wxStrip_Mnemonics);
+
+        wxCoord w, h;
+        dc.GetTextExtent(name, &w, &h);
+
+        *width = w + m_margin;
+        *height = h;
+    }
+    else
+    {
+        *width = 0;
+        *height = 0;
+    }
+
+    return true;
+}
+
+void wxOwnerDrawnBase::GetFontToUse(wxFont& font) const
+{
+    font = m_font.IsOk() ? m_font : *wxNORMAL_FONT;
+}
+
+void wxOwnerDrawnBase::GetColourToUse(wxODStatus stat, wxColour& colText, wxColour& colBack) const
+{
+    if ( stat & wxODSelected )
+    {
+        colText = wxSystemSettings::GetColour(
+                !(stat & wxODDisabled) ? wxSYS_COLOUR_HIGHLIGHTTEXT
+                                       : wxSYS_COLOUR_GRAYTEXT);
+
+        colBack = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
+    }
+    else
+    {
+        
+        if ( stat & wxODDisabled )
+        {
+            colText = wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT);
+        }
+        else
+        {
+            colText = m_colText.IsOk() ? m_colText
+                                     : wxSystemSettings::GetColour(wxSYS_COLOUR_MENUTEXT);
+        }
+
+        colBack = m_colBack.IsOk() ? m_colBack
+                                 : wxSystemSettings::GetColour(wxSYS_COLOUR_MENU);
+    }
+}
+
+#endif 

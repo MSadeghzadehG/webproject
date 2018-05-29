@@ -1,0 +1,188 @@
+
+
+
+#include <boost/test/unit_test.hpp>
+#include <libdevcore/CommonJS.h>
+#include <libethashseal/Ethash.h>
+#include <test/tools/libtesteth/TestOutputHelper.h>
+#include <test/tools/libtesteth/TestUtils.h>
+#include <test/tools/libtestutils/FixedClient.h>
+
+using namespace std;
+using namespace dev;
+using namespace dev::eth;
+using namespace dev::test;
+
+BOOST_FIXTURE_TEST_SUITE(ClientBase, ParallelClientBaseFixture)
+
+BOOST_AUTO_TEST_CASE(blocks)
+{
+	enumerateClients([](Json::Value const& _json, dev::eth::ClientBase& _client) -> void
+	{
+		auto compareState = [&_client](Json::Value const& _o, string const& _name, BlockNumber _blockNumber) -> void
+		{
+			Address address(_name);
+
+						u256 expectedBalance = u256(_o["balance"].asString());
+			u256 balance = _client.balanceAt(address, _blockNumber);
+			ETH_CHECK_EQUAL(expectedBalance, balance);
+
+						u256 expectedCount = u256(_o["nonce"].asString());
+			u256 count = _client.countAt(address,  _blockNumber);
+			ETH_CHECK_EQUAL(expectedCount, count);
+
+						for (string const& pos: _o["storage"].getMemberNames())
+			{
+				u256 expectedState = u256(_o["storage"][pos].asString());
+				u256 state = _client.stateAt(address, u256(pos), _blockNumber);
+				ETH_CHECK_EQUAL(expectedState, state);
+			}
+
+						bytes expectedCode = fromHex(_o["code"].asString());
+			bytes code = _client.codeAt(address, _blockNumber);
+			ETH_CHECK_EQUAL_COLLECTIONS(expectedCode.begin(), expectedCode.end(),
+										code.begin(), code.end());
+		};
+
+		for (string const& name: _json["postState"].getMemberNames())
+		{
+			Json::Value o = _json["postState"][name];
+			compareState(o, name, PendingBlock);
+		}
+
+		for (string const& name: _json["pre"].getMemberNames())
+		{
+			Json::Value o = _json["pre"][name];
+			compareState(o, name, 0);
+		}
+
+				unsigned expectedNumber = _json["blocks"].size();
+		unsigned number = _client.number();
+		ETH_CHECK_EQUAL(expectedNumber, number);
+		
+		u256 totalDifficulty = u256(_json["genesisBlockHeader"]["difficulty"].asString());
+		for (Json::Value const& block: _json["blocks"])
+		{
+			Json::Value blockHeader = block["blockHeader"];
+			Json::Value uncles = block["uncleHeaders"];
+			Json::Value transactions = block["transactions"];
+			h256 blockHash = h256(fromHex(blockHeader["hash"].asString()));
+			
+						for (Json::Value const& uncle: uncles)
+			{
+				totalDifficulty += u256(uncle["difficulty"].asString());
+			}
+			
+						h256 expectedHashFromNumber = h256(fromHex(blockHeader["hash"].asString()));
+			h256 hashFromNumber = _client.hashFromNumber(jsToInt(blockHeader["number"].asString()));
+			ETH_CHECK_EQUAL(expectedHashFromNumber, hashFromNumber);
+			
+						auto compareBlockInfos = [](Json::Value const& _b, BlockHeader _blockInfo) -> void
+			{
+				LogBloom expectedBlockInfoBloom = LogBloom(fromHex(_b["bloom"].asString()));
+				Address expectedBlockInfoCoinbase = Address(fromHex(_b["coinbase"].asString()));
+				u256 expectedBlockInfoDifficulty = u256(_b["difficulty"].asString());
+				bytes expectedBlockInfoExtraData = fromHex(_b["extraData"].asString());
+				u256 expectedBlockInfoGasLimit = u256(_b["gasLimit"].asString());
+				u256 expectedBlockInfoGasUsed = u256(_b["gasUsed"].asString());
+				h256 expectedBlockInfoHash = h256(fromHex(_b["hash"].asString()));
+				h256 expectedBlockInfoMixHash = h256(fromHex(_b["mixHash"].asString()));
+				eth::Nonce expectedBlockInfoNonce = eth::Nonce(fromHex(_b["nonce"].asString()));
+				u256 expectedBlockInfoNumber = u256(_b["number"].asString());
+				h256 expectedBlockInfoParentHash = h256(fromHex(_b["parentHash"].asString()));
+				h256 expectedBlockInfoReceiptsRoot = h256(fromHex(_b["receiptTrie"].asString()));
+				u256 expectedBlockInfoTimestamp = u256(_b["timestamp"].asString());
+				h256 expectedBlockInfoTransactionsRoot = h256(fromHex(_b["transactionsTrie"].asString()));
+				h256 expectedBlockInfoUncldeHash = h256(fromHex(_b["uncleHash"].asString()));
+				ETH_CHECK_EQUAL(expectedBlockInfoBloom, _blockInfo.logBloom());
+				ETH_CHECK_EQUAL(expectedBlockInfoCoinbase, _blockInfo.author());
+				ETH_CHECK_EQUAL(expectedBlockInfoDifficulty, _blockInfo.difficulty());
+				ETH_CHECK_EQUAL_COLLECTIONS(
+					expectedBlockInfoExtraData.begin(),
+					expectedBlockInfoExtraData.end(),
+					_blockInfo.extraData().begin(),
+					_blockInfo.extraData().end()
+				);
+				ETH_CHECK_EQUAL(expectedBlockInfoGasLimit, _blockInfo.gasLimit());
+				ETH_CHECK_EQUAL(expectedBlockInfoGasUsed, _blockInfo.gasUsed());
+				ETH_CHECK_EQUAL(expectedBlockInfoHash, _blockInfo.hash());
+				ETH_CHECK_EQUAL(expectedBlockInfoMixHash, Ethash::mixHash(_blockInfo));
+				ETH_CHECK_EQUAL(expectedBlockInfoNonce, Ethash::nonce(_blockInfo));
+				ETH_CHECK_EQUAL(expectedBlockInfoNumber, _blockInfo.number());
+				ETH_CHECK_EQUAL(expectedBlockInfoParentHash, _blockInfo.parentHash());
+				ETH_CHECK_EQUAL(expectedBlockInfoReceiptsRoot, _blockInfo.receiptsRoot());
+				ETH_CHECK_EQUAL(expectedBlockInfoTimestamp, _blockInfo.timestamp());
+				ETH_CHECK_EQUAL(expectedBlockInfoTransactionsRoot, _blockInfo.transactionsRoot());
+				ETH_CHECK_EQUAL(expectedBlockInfoUncldeHash, _blockInfo.sha3Uncles());
+			};
+
+			BlockHeader blockInfo((static_cast<FixedClient&>(_client)).bc().headerData(blockHash), HeaderData);
+			compareBlockInfos(blockHeader, blockInfo);
+
+						unsigned expectedBlockDetailsNumber = jsToInt(blockHeader["number"].asString());
+			totalDifficulty += u256(blockHeader["difficulty"].asString());
+			BlockDetails blockDetails = _client.blockDetails(blockHash);
+			ETH_CHECK_EQUAL(expectedBlockDetailsNumber, blockDetails.number);
+			ETH_CHECK_EQUAL(totalDifficulty, blockDetails.totalDifficulty);
+			
+			auto compareTransactions = [](Json::Value const& _t, Transaction _transaction) -> void
+			{
+				bytes expectedTransactionData = fromHex(_t["data"].asString());
+				u256 expectedTransactionGasLimit = u256(_t["gasLimit"].asString());
+				u256 expectedTransactionGasPrice = u256(_t["gasPrice"].asString());
+				u256 expectedTransactionNonce = u256(_t["nonce"].asString());
+				u256 expectedTransactionSignatureR = h256(fromHex(_t["r"].asString()));
+				u256 expectedTransactionSignatureS = h256(fromHex(_t["s"].asString()));
+				
+				ETH_CHECK_EQUAL_COLLECTIONS(
+					expectedTransactionData.begin(),
+					expectedTransactionData.end(),
+					_transaction.data().begin(),
+					_transaction.data().end()
+				);
+				ETH_CHECK_EQUAL(expectedTransactionGasLimit, _transaction.gas());
+				ETH_CHECK_EQUAL(expectedTransactionGasPrice, _transaction.gasPrice());
+				ETH_CHECK_EQUAL(expectedTransactionNonce, _transaction.nonce());
+				ETH_CHECK_EQUAL(expectedTransactionSignatureR, _transaction.signature().r);
+				ETH_CHECK_EQUAL(expectedTransactionSignatureS, _transaction.signature().s);
+			};
+
+			Transactions ts = _client.transactions(blockHash);
+			TransactionHashes tHashes = _client.transactionHashes(blockHash);
+			unsigned tsCount = _client.transactionCount(blockHash);
+			
+			ETH_REQUIRE(transactions.size() == ts.size());
+			ETH_REQUIRE(transactions.size() == tHashes.size());
+			
+						ETH_CHECK_EQUAL(transactions.size(), tsCount);
+			
+			for (unsigned i = 0; i < tsCount; i++)
+			{
+				Json::Value t = transactions[i];
+				
+								Transaction transaction = _client.transaction(blockHash, i);
+				compareTransactions(t, transaction);
+
+								Transaction transactionByHash = _client.transaction(transaction.sha3());
+				compareTransactions(t, transactionByHash);
+				
+								compareTransactions(t, ts[i]);
+				
+								ETH_CHECK_EQUAL(transaction.sha3(), tHashes[i]);
+			}
+			
+						unsigned usCount = _client.uncleCount(blockHash);
+			ETH_CHECK_EQUAL(uncles.size(), usCount);
+			
+			for (unsigned i = 0; i < usCount; i++)
+			{
+				Json::Value u = uncles[i];
+				
+								BlockHeader uncle = _client.uncle(blockHash, i);
+				compareBlockInfos(u, uncle);
+			}
+		}
+	});
+}
+
+BOOST_AUTO_TEST_SUITE_END()
