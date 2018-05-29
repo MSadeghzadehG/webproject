@@ -61,7 +61,8 @@ $(document).ready(function() {
         //     console.log("c++")
         // }
         $.ajax({
-            url: 'http://91.98.76.233:80',
+            url: 'http://91.98.76.233:5000',
+            // url: 'http://localhost:5000',
             type: 'POST',
             // contentType: "application/json",
             dataType: 'json',
@@ -221,8 +222,8 @@ $(document).ready(function() {
             typingWords.innerHTML = typingWords.innerHTML + "<span class='result' style='color: #39FF14 ; font-size : 20px;'> currect : " + String(currectKey) + "</span>";
             typingWords.innerHTML = typingWords.innerHTML + "<span class='result' style='color: #FA8072 ; font-size : 20px;'> wrong : " + String(wrongKey) + "</span>";
             $.post({
-                url: 'http://91.98.76.233:80',
-                // url: 'http://localhost:80',
+                url: 'http://91.98.76.233:5000',
+                // url: 'http://localhost:5000',
                 contentType: "application/json",
                 dataType: 'text',
                 data : JSON.stringify({'reqType':'typingResultSubmit','time': time , 'speed': speed , 'wrongKey': wrongKey , 'currectKey': currectKey , 'lang' : 'java' })
