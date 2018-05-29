@@ -5,7 +5,7 @@ import ast
 import json
 import os
 
-PORT = 8000
+PORT = 80
 
 def return_words(lang):
     f = open(lang+".txt",'r')
