@@ -1,3 +1,4 @@
+// $(window).load(function() {
 $(document).ready(function() {
     var isTypingMode = false;
     var lapdiv = document.getElementById("lapdiv");
@@ -16,6 +17,10 @@ $(document).ready(function() {
     var isFinished = false;
     // console.log("↹".charCodeAt(0));
 
+    var loadingGif = document.createElement("img");
+    loadingGif.id = "loadingGif";
+    loadingGif.src = "./loadingGifs/loader-meta.gif";
+    loadingGif.style = "height:300px ; width:400px;";
 
     var newRadio1 = document.createElement("input");
     newRadio1.appendChild(document.createTextNode(""));
@@ -47,7 +52,14 @@ $(document).ready(function() {
     typingWords.appendChild(startBtn);
 
     $("#testbutton").click(function() {
-        typingWords.innerHTML = "<img id='loadingGif' src='./loadingGifs/loader-meta.gif' style='height:300px; width:400px;'/>";
+        // typingWords.innerHTML = "<img id='loadingGif' src='./loadingGifs/loader-meta.gif' style='height:300px; width:400px;'/>";
+        // typingWords.removeChild(newRadio1);
+        // typingWords.removeChild(newRadio2);
+        // typingWords.removeChild(newRadio3);
+        // typingWords.removeChild(startBtn);
+        typingWords.innerHTML = "";
+        typingWords.appendChild(loadingGif);
+
         // lang = $("input[name=lang]:checked").val();
         // console.log($("input[name=lang]:checked").val());
         // if (document.getElementById('java').checked) {
@@ -61,8 +73,8 @@ $(document).ready(function() {
         //     console.log("c++")
         // }
         $.ajax({
-            url: 'http://91.98.76.233:5000',
-            // url: 'http://localhost:5000',
+            // url: 'http://91.98.76.233:5000',
+            url: 'http://localhost:5000',
             type: 'POST',
             // contentType: "application/json",
             dataType: 'json',
@@ -278,10 +290,11 @@ $(document).ready(function() {
         }
 
         function clickHandler() {
+            var clickTime;
             if (isTypingMode == false){	
                 isTypingMode = true;
-                laptop.style.opacity = "0";
-                    
+                changeOpacity(isTypingMode,clickTime);
+
                 keyBoard.style.transform = "perspective( 1600px ) rotateX( 0deg )"; 
                 keyBoard.style.marginTop = "-61px";
                 keyBoard.style.width = "650px";
@@ -296,7 +309,9 @@ $(document).ready(function() {
             }
             else {
                 isTypingMode = false;
-                
+                clickTime = performance.now();
+                changeOpacity(isTypingMode,clickTime);
+
                 keyBoard.style.transform = "perspective( 1600px ) rotateX( 80deg )";
                 keyBoard.style.transformOrigin = "50% 0%";
                 keyBoard.style.transition = "1s all linear";	
@@ -312,14 +327,20 @@ $(document).ready(function() {
         
                 // typingWords.style.transform = "translate(-50%, -50%)";
                 typingWords.style.transform = "perspective( 1400px ) rotateX( 0deg )";	
-                window.setTimeout(changeOpacity, 990);
             }
         }
         
         lapdiv.addEventListener("click", clickHandler);			 
         
-        function changeOpacity(){
-            laptop.style.opacity = "1";
+        function changeOpacity(isTypingMode,clickTime){
+            if (isTypingMode)
+                laptop.style.opacity = "0";
+            else {
+                window.setTimeout(function() {
+                    if (!isTypingMode)
+                        laptop.style.opacity = "1";
+                }, 990);
+            }
         }
     });
 });
