@@ -1,2 +1,0 @@
-/iluwatar/java-design-patterns
-/ReactiveX/RxJava

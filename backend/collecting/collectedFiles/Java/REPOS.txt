@@ -1,9 +1,0 @@
-/iluwatar/java-design-patterns
-/ReactiveX/RxJava
-/elastic/elasticsearch
-/spring-projects/spring-boot
-/google/guava
-/kdn251/interviews
-/apache/incubator-dubbo
-/zxing/zxing
-/skylot/jadx
