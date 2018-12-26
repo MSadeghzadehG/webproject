@@ -4,15 +4,25 @@
   "description": "",
   "main": "f.js",
   "dependencies": {
+    "bcrypt": "^3.0.3",
     "compression": "^1.7.3",
     "content-disposition": "^0.5.3",
+    "cookie-parser": "^1.4.3",
+    "csurf": "^1.9.0",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "finalhandler": "^1.1.1",
     "fs": "^0.0.1-security",
     "mongodb": "^3.1.10",
     "mongoose": "^5.4.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "serve-static": "^1.13.2"
+    "serve-static": "^1.13.2",
+    "session-file-store": "^1.2.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {},
   "scripts": {
