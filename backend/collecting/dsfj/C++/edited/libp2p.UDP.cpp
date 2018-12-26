@@ -1,0 +1,41 @@
+
+
+
+#include "UDP.h"
+using namespace std;
+using namespace dev;
+using namespace dev::p2p;
+
+const char* RLPXWarn::name() { return "!X!"; }
+const char* RLPXNote::name() { return "-X-"; }
+
+h256 RLPXDatagramFace::sign(Secret const& _k)
+{
+	assert(packetType());
+	
+	RLPStream rlpxstream;
+	rlpxstream.appendRaw(bytes(1, packetType())); 	streamRLP(rlpxstream);
+	bytes rlpxBytes(rlpxstream.out());
+	
+	bytesConstRef rlpx(&rlpxBytes);
+	h256 sighash(dev::sha3(rlpx)); 	Signature sig = dev::sign(_k, sighash); 	
+	data.resize(h256::size + Signature::size + rlpx.size());
+	bytesRef rlpxHash(&data[0], h256::size);
+	bytesRef rlpxSig(&data[h256::size], Signature::size);
+	bytesRef rlpxPayload(&data[h256::size + Signature::size], rlpx.size());
+	
+	sig.ref().copyTo(rlpxSig);
+	rlpx.copyTo(rlpxPayload);
+	
+	bytesConstRef signedRLPx(&data[h256::size], data.size() - h256::size);
+	dev::sha3(signedRLPx).ref().copyTo(rlpxHash);
+
+	return sighash;
+}
+
+Public RLPXDatagramFace::authenticate(bytesConstRef _sig, bytesConstRef _rlp)
+{
+	Signature const& sig = *(Signature const*)_sig.data();
+	return dev::recover(sig, sha3(_rlp));
+}
+

@@ -1,0 +1,42 @@
+<html>
+  <head >
+    <title>codingFaster</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		
+		</head>
+  <body bgcolor="#696969" id="texture1" style="overflow: hidden;">
+   <div name="top_row" class="topRow">
+       <h1 class="title" id="title">FastCode</h1>
+       <h2 class = "subtitle">coding test</h2>
+       <h2 class = "subtitle">learning lessons</h2>
+   </div>
+   <div name="main_row" class="mainRow" id="mainRow">
+		<p style="text-align: center">
+			<img id="lapImage" class="laptopimg" src="display.png" >
+		</p>
+   </div>
+   <div name="bottom_row" class="bottomRow"></div>
+<script>
+			var elementIsClicked = false; // declare the variable that tracks the state
+			 // grab a reference to your element			
+			 var elem = elem;
+			function clickHandler(){ // declare a function that updates the state
+			  if (elementIsClicked == false){	
+					elementIsClicked = true;
+					elem.src = "new.png";
+					elem.style.marginTop = "10px";
+					elem.removeClass;
+					elem.style.height = "125%";
+				}
+				else {
+					elementIsClicked = false;
+					elem.src = "display.png";
+					elem.removeClass;
+					elem.style.height = "95%";
+				}
+			}
+			elem.addEventListener("click", clickHandler);
+			
+		</script>
+  </body>
+</html>

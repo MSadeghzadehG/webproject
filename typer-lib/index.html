@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body bgcolor="#696969" id="texture1" >
+		<div name="top_row" class="topRow">
+			<h1 class="title" id="title">FastCode</h1>
+			<h2 class = "subtitle">coding test</h2>
+			<h2 class = "subtitle">learning lessons</h2>
+		</div>
+		<div name="main_row" class="mainRow" id="mainRow">
+				<!--img id="lapImage" class="laptopimg" src="display.png" ><!-->
+				<div class="middle main container" id="lapdiv" >
+					<img src="monitor-new.png" draggable="false" class="monitorImage" id="monitorImage"/>
+					<img src="keyBoard-new.png" class="keyboardImage" id="keyboardImage" draggable = "false"/>
+					<p class="centered" style="color: black" id="typer_paragraph"></p>
+				</div>
+		</div>
+		<div name="bottom_row" class="bottomRow"></div>
+		
+	</body>
+	<script type="text/javascript" src="typer_lib.js"></script>
+	<script>
+			typer('#typer_paragraph')
+			.line('salam ! inja felan kar ra mikonim!')
+			.line('jesus!!! ')
+			.pause(700)
+			.continue('asghar halesh chetore?')
+			.pause(700)
+			.back(8 , 50)
+			.continue('khoobe!!' , 70);
+			var elementIsClicked = false; // declare the variable that tracks the state
+			var lapdiv = document.getElementById("lapdiv");
+			var monitor = document.getElementById("monitorImage");
+			var keyBoard = document.getElementById("keyboardImage");
+			function clickHandler(){ // declare a function that updates the state
+				if (elementIsClicked == false){	
+					elementIsClicked = true;
+					//lapdiv.style.opacity = "0";
+						
+					keyBoard.style.transform = "perspective( 1600px ) rotateX( 0deg )"; 
+					keyBoard.style.marginTop = -50;
+					keyBoard.style.width = "558px";
+					keyBoard.style.marginLeft = "70px";
+					
+					monitor.style.transform = "perspective( 1400px ) rotateX( -20deg )";	
+					monitor.style.transformOrigin =" 50% 50%";	
+					
+				}
+				else {
+					elementIsClicked = false;
+					
+					keyBoard.style.transform = "perspective( 1440px ) rotateX( 80deg )";
+					keyBoard.style.transformOrigin = "50% 0%";
+					keyBoard.style.transition = "1s all linear";	
+					keyBoard.style.marginTop = "-20px";
+					keyBoard.style.display="inline";
+					keyBoard.style.width = "580px";
+					keyBoard.style.marginLeft = "62px";
+					
+					monitor.style.transform = "perspective( 1400px ) rotateX( 0deg )";	
+					monitor.style.transition = "1s all linear";	
+					monitor.style.width= "583px";
+					monitor.style.marginLeft= "57px"; 
+					monitor.style.marginTop = "1px";
+					//window.setTimeout(changeOpacity, 990);
+				}
+			}
+			function changeOpacity(){
+				lapdiv.style.opacity = "1";
+			}
+			lapdiv.addEventListener("click", clickHandler);			 
+		</script>
+
+</html>

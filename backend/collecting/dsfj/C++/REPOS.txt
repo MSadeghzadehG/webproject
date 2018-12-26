@@ -1,0 +1,7 @@
+/CMU-Perceptual-Computing-Lab/openpose
+/ssloy/tinyrenderer
+/dolphin-emu/dolphin
+/yuzu-emu/yuzu
+/ethereum/solidity
+/citra-emu/citra
+/kyleneideck/BackgroundMusic
