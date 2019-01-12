@@ -16,6 +16,7 @@
                 <ul class="nav navbar-nav">
                     <li v-bind:class="{active : isActiveHome}"><router-link to="/">Home</router-link></li>
                     <li v-bind:class="{active : isActiveLogin}"><router-link to="/login">Login / Register</router-link></li>
+                    <li v-bind:class="{active : isActiveType}"><router-link to="/type">Start Typing</router-link></li>
                 </ul>
                 <div class="pull-right">
                     <button class="btn btn-rose btn-fab btn-fab-mini btn-round" v-on:click="changeColorTo('rose')">
@@ -80,6 +81,9 @@
             isActiveLogin : function(){
                 return this.$route.path === '/login';
             },
+            isActiveType: function(){
+                return this.$route.path === '/type';
+            }
         },
         methods: {
             changeColorTo: function (colorName) {
