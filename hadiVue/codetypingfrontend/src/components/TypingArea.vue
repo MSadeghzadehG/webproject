@@ -14,18 +14,25 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 text-center" v-html="outputHTML">
-                    <!--<hr>-->
-                    <!--<p class="text-justify">-->
-                    <!--Hello World my name is <span class="label label-danger">Hadi</span> and i'm here to teach you front-end-->
-                    <!--</p>-->
+                <!--v-html="outputHTML"-->
+                <div v-if="this.isTyping" class="col-md-12 text-center" v-html="computedSpanizedOriginalText">
+                    <h4>BIAH</h4>
+                </div>
+                <div v-else class="col-md-12 text-center">
+                    <p class="text-justify" style="color:black !important;"
+                       v-html="this.getSpanizeTagString(this.originalTestParagraph)">
+
+                    </p>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <textarea class="form-control" id="typingArea" v-model="typedText" v-on:keyup="setTypedText"></textarea>
+                    <textarea class="form-control" id="typingArea" v-model="typedText"></textarea>
                 </div>
+            </div>
+            <div class="d-hidden" v-html="this.spanizedTypedText">
+
             </div>
         </div>
     </div>
@@ -40,36 +47,43 @@
                 typedText: '',
                 typoIndex: -1,
                 numOfWords: 0,
-                preDefTimer : 20,
+                preDefTimer: 20,
                 timer: 20,
                 isTyping: false,
-                timerInterval : '',
+                timerInterval: '',
+                typoNumber: 0,
+                spanizedTypedText: '',
+                spanizedOriginalText: ''
             }
         },
         methods: {
-            setTypedText: function (event) {
-                // let keyPressed = event.key;
-                // window.console.log(keyPressed);
-                // if (keyPressed === "Backspace") {
-                //     this.typedText.substring(0, this.typedText.length);
-                // } else if (keyPressed === "Shift" || keyPressed === "LShift") {
-                //
-                // } else {
-                //     this.typedText += event.key;
-                // }
+            getSpanizeTagString: function (string) {
+                let spanizeHtml = '';
+                let counter = 0;
+                for (let i = 0; i < string.length; i++) {
+                    counter++;
+                    if (counter === 120) {
+                        spanizeHtml += '<br>';
+                        counter = 0;
+                    }
+                    spanizeHtml += '<span id="' + i + '" class="" >' + string[i] + '</span>';
+
+                }
+                return spanizeHtml;
             },
-            startTypingSpeed:function(){
+            startTypingSpeed: function () {
                 this.isTyping = true;
                 this.startTimer();
             },
             endTypingSpeed: function () {
                 clearInterval(this.timerInterval);
                 this.isTyping = false;
-                this.timer =  0;
-                document.getElementById("typingArea").setAttribute("disabled","true");
+                this.timer = 0;
+                document.getElementById("typingArea").setAttribute("disabled", "true");
+                // this.checkTypos();
             },
             startTimer: function () {
-                this.timerInterval  =  setInterval(() => {
+                this.timerInterval = setInterval(() => {
                     if (this.timer === 0) {
                         this.endTypingSpeed();
                         return
@@ -77,64 +91,64 @@
                     this.timer--;
                 }, 1000)
             },
-            reset:function(){
+            reset: function () {
                 clearInterval(this.timerInterval);
                 this.isTyping = false;
                 this.typoIndex = -1;
                 this.typedText = '';
                 this.timer = this.preDefTimer;
+                this.typoNumber = 0;
                 document.getElementById("typingArea").removeAttribute("disabled");
-            },
-            countWord(string, wordToSearch) {
-                let count = 0;
-                for (let i = 0; i < string.length; i++) {
-                    if (string[i] === wordToSearch)
-                        count++;
-                }
-                return count;
             },
         },
         watch: {
             typedText: function (value) {
-                if(!this.isTyping){
+                if (!this.isTyping) {
                     this.startTypingSpeed();
                 }
-                for (let i = 0; i < value.length; i++) {
-                    if (value[i] !== this.originalTestParagraph[i]) {
-                        this.typoIndex = i;
-                        break;
-                    }
-                    this.typoIndex = -1;
-                }
-                this.numOfWords = this.countWord(value, ' ');
+                // let spanizedTypedText = this.getSpanizeTagString(value);
+                // this.numOfWords = this.countWord(value, ' ');
             },
-            numOfWords: function (value) {
-                window.console.log("new number of words:" + this.numOfWords);
-            }
         },
         computed: {
-            outputHTML: function () {
-                window.console.log(this.typedText)
-                let newHTML = '<p class="text-justify">';
-                newHTML += '<span class="label label-success">';
-
-                if (this.typoIndex === -1) {
-                    newHTML += this.originalTestParagraph.substr(0, this.typedText.length) + '</span>';
-                    newHTML += this.originalTestParagraph.substr(this.typedText.length)
-                    newHTML += '</p>';
-                    return newHTML;
-
-                }
-                newHTML += this.originalTestParagraph.substr(0, this.typoIndex) + '</span>';
-                newHTML += '<span class="label label-danger">';
-                newHTML += this.originalTestParagraph.substring(this.typoIndex, this.typedText.length);
-                newHTML += '</span>';
-                newHTML += this.originalTestParagraph.substr(this.typedText.length)
-                newHTML += '</p>';
-                return newHTML;
-
-            }
-        }
+            // outputHTML: function () {
+            //     // window.console.log(this.typedText)
+            //     let newHTML = '<p class="text-justify">';
+            //     newHTML += '<span class="label label-success">';
+            //
+            //     for(let i = 0 ; i < this.typedText.length ; i++){
+            //         if(this.typoIndex !== i){
+            //             newHTML += this.originalTestParagraph.substr(0, this.typedText.length);
+            //         }else{
+            //             //ta inja doros boode residim yeki ke ghalate
+            //             newHTML += '</span>';
+            //             //ghalate ro beza intoo
+            //             newHTML += '</span><span class="label label-danger>"' + this.originalTestParagraph.charAt(this.typoIndex);
+            //         }
+            //     }
+            //     let characterToBeWrong = this.originalTestParagraph.charAt(this.typoIndex);
+            //     if (this.typoIndex === -1) {
+            //         newHTML += this.originalTestParagraph.substr(0, this.typedText.length) + '</span>';
+            //         newHTML += this.originalTestParagraph.substr(this.typedText.length)
+            //         newHTML += '</p>';
+            //         return newHTML;
+            //     }
+            //     newHTML += this.originalTestParagraph.substr(0, this.typoIndex) + '</span>';
+            //     newHTML += '<span class="label label-danger">';
+            //     newHTML += this.originalTestParagraph.substring(this.typoIndex, this.typedText.length);
+            //     newHTML += '</span>';
+            //     newHTML += this.originalTestParagraph.substr(this.typedText.length)
+            //     newHTML += '</p>';
+            //     return newHTML;
+            //
+            // }
+        },
+        computedSpanizedOriginalText: function () {
+            this.getSpanizeTagString(this.originalTestParagraph);
+        },
+        spanizedTypedText: function () {
+            return this.getSpanizeTagString(this.typedText);
+        },
     }
 </script>
 
